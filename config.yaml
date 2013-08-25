@@ -1,0 +1,4 @@
+listen: ":9090"
+mongodb: "127.0.0.1"
+dbname: "test"
+loglevel: 1

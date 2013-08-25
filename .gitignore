@@ -1,0 +1,14 @@
+# Linux
+*~
+
+# Winodws
+Thumbs.db
+
+# Go Packet
+/pkg/*
+/src/labix.org/*
+/src/launchpad.net/*
+
+# Go Binary
+/oos.pw
+/oos.pw.exe
