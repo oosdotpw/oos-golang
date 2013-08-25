@@ -10,5 +10,5 @@ Thumbs.db
 /src/launchpad.net/*
 
 # Go Binary
-/oos.pw
-/oos.pw.exe
+/oos-go
+/oos-go.exe

@@ -1,1 +1,1 @@
-## oss.pw
+## oss-go
