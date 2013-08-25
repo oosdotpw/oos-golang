@@ -20,7 +20,7 @@ type TokenModel struct {
 }
 
 type AccountModel struct {
-	ObjectId   bson.ObjectId "_id,omitempty"
+	ObjectId   bson.ObjectId `_id,omitempty`
 	Username   string        `username`
 	Passwd     string        `passwd`
 	Contact    string        `contact`
