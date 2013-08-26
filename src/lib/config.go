@@ -14,6 +14,10 @@ type ConfigValue struct {
 
 var Config ConfigValue
 
+func init() {
+	LoadConfig("./config.yml")
+}
+
 func LoadConfig(file string) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {

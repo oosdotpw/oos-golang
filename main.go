@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	lib.LoadConfig("./config.yml")
 	lib.Log(lib.INF, "oos start at "+lib.Config.Listen)
 
 	maps := map[string]lib.HandlerInterface{
