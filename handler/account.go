@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"lib"
-	"model"
+	"oos-go/lib"
+	"oos-go/model"
 )
 
 type AccountSignup struct {

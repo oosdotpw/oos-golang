@@ -25,3 +25,11 @@ func LoadConfig(file string) {
 	}
 	goyaml.Unmarshal(data, &Config)
 }
+
+func GoCodetest(file string) {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	goyaml.Unmarshal(data, &Config)
+}

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"handler"
-	"lib"
 	"net/http"
+	"oos-go/handler"
+	"oos-go/lib"
 )
 
 func main() {

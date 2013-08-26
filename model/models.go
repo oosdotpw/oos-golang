@@ -1,8 +1,8 @@
 package model
 
 import (
-	"db"
 	"labix.org/v2/mgo"
+	"oos-go/db"
 )
 
 var Account *mgo.Collection

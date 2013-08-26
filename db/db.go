@@ -2,7 +2,7 @@ package db
 
 import (
 	"labix.org/v2/mgo"
-	"lib"
+	"oos-go/lib"
 )
 
 var (

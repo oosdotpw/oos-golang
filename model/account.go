@@ -2,10 +2,10 @@ package model
 
 import (
 	"crypto/sha256"
-	"db"
 	"encoding/hex"
 	"io"
 	"labix.org/v2/mgo/bson"
+	"oos-go/db"
 	"time"
 )
 
