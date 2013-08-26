@@ -14,6 +14,8 @@ type HttpServer struct {
 func (h HttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
+	Log(INF, r.URL)
+
 	typ, extis := h.Maps[r.URL.Path]
 	if !extis {
 		http.Error(w, "Page Not Found", 404)
@@ -26,8 +28,6 @@ func (h HttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	rHandler.FieldByName("Request").Set(reflect.ValueOf(r))
 
 	rHandler.MethodByName("Post").Call([]reflect.Value{})
-
-	Log(INF, r.URL)
 }
 
 func NewHttpServer(maps map[string]HandlerInterface) HttpServer {
