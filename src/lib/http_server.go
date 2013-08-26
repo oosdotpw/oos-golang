@@ -30,7 +30,7 @@ func (h HttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	Log(INF, r.URL)
 }
 
-func NewHttpHandler(maps map[string]HandlerInterface) HttpServer {
+func NewHttpServer(maps map[string]HandlerInterface) HttpServer {
 	newMap := make(HandlerMap)
 	for key, value := range maps {
 		newMap[key] = reflect.TypeOf(value)
