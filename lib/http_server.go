@@ -16,8 +16,8 @@ func (h HttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	Log(INF, r.URL)
 
-	typ, extis := h.Maps[r.URL.Path]
-	if !extis {
+	typ, exist := h.Maps[r.URL.Path]
+	if !exist {
 		http.Error(w, "Page Not Found", 404)
 		return
 	}
