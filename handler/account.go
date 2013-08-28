@@ -1,12 +1,37 @@
 package handler
 
 import (
+	"math/rand"
 	"oos-go/lib"
 	"oos-go/model"
 )
 
 type AccountSignup struct {
 	lib.Handler
+}
+
+type AccountLogin struct {
+	lib.Handler
+}
+
+type AccountLogout struct {
+	lib.Handler
+}
+
+type AccountSessionInfo struct {
+	lib.Handler
+}
+
+func randInt(min int, max int) int {
+	return min + rand.Intn(max-min)
+}
+
+func randomString(l int) string {
+	bytes := make([]byte, l)
+	for i := 0; i < l; i++ {
+		bytes[i] = byte(randInt(65, 90))
+	}
+	return string(bytes)
 }
 
 func (h AccountSignup) Post() int {
@@ -30,4 +55,62 @@ func (h AccountSignup) Post() int {
 	model.InsertAccount(username, passwd, email, contact)
 
 	return h.Result(nil, false)
+}
+
+func (h AccountLogin) Post() int {
+	h.Init()
+
+	if h.Filter("username", `^\w{3,16}$`, "failure") ||
+		h.Filter("passwd", `^.{6,20}$`, "failure") {
+		return 200
+	}
+
+	username := h.PostValue["username"]
+	passwd := h.PostValue["passwd"]
+	ip := h.PostValue["IP"]
+	ua := h.PostValue["UA"]
+
+	if model.CheckAccount(username, passwd) == false {
+		return h.Error("failure")
+	}
+
+	m := model.GetAccount(username)
+	token := randomString(64)
+
+	model.InsertToken(m.ObjectId, token, ip, ua)
+
+	return h.Result(lib.Json{"token": token}, false)
+
+}
+
+func (h AccountLogout) Post() int {
+	h.Init()
+
+	token := h.PostValue["token"]
+
+	if model.CheckToken(token) == false {
+		return h.Error("invalid_token")
+	}
+
+	model.StopToken(token)
+
+	return h.Result(nil, false)
+}
+
+func (h AccountSessionInfo) Post() int {
+	h.Init()
+
+	token := h.PostValue["token"]
+
+	if model.CheckToken(token) == false {
+		return h.Error("invalid_token")
+	}
+
+	m := model.GetToken(token)
+
+	dataJson := lib.Json{}
+	dataJson["username"] = m.Username
+	dataJson["expired"] = m.Tokens[0].ExpiredTime.Unix()
+
+	return h.Result(dataJson, false)
 }
