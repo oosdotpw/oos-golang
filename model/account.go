@@ -31,12 +31,6 @@ type AccountModel struct {
 }
 
 func InsertAccount(username string, passwd string, email string, contact string) {
-	toSHA256 := func(s string) string {
-		h := sha256.New()
-		io.WriteString(h, s)
-		return hex.EncodeToString(h.Sum(nil))
-	}
-
 	m := AccountModel{
 		Username:   username,
 		Passwd:     toSHA256(passwd),
@@ -54,12 +48,6 @@ func ExistAccount(username string) bool {
 }
 
 func CheckAccount(username string, passwd string) bool {
-	toSHA256 := func(s string) string {
-		h := sha256.New()
-		io.WriteString(h, s)
-		return hex.EncodeToString(h.Sum(nil))
-	}
-
 	m := bson.M{"username": username, "passwd": toSHA256(passwd)}
 
 	return db.Exist(Account, m)
@@ -132,4 +120,10 @@ func GetToken(token string) AccountModel {
 	}
 
 	return m
+}
+
+func toSHA256(s string) string {
+	h := sha256.New()
+	io.WriteString(h, s)
+	return hex.EncodeToString(h.Sum(nil))
 }

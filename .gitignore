@@ -5,9 +5,6 @@
 Thumbs.db
 
 # Go Packet
-/pkg/*
-/src/labix.org/*
-/src/launchpad.net/*
 
 # Go Binary
 /oos-go
