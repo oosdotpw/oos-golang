@@ -6,7 +6,7 @@ import (
 	"io"
 	"labix.org/v2/mgo/bson"
 	"oos-go/db"
-	"oos-go/lib"
+	"oos-go/utils"
 	"time"
 )
 
@@ -61,6 +61,19 @@ func GetAccount(username string) AccountModel {
 	return m
 }
 
+func GetAccountByToken(token string) AccountModel {
+	m := AccountModel{}
+
+	findM := bson.M{"tokens.token": token, "tokens.alive": true}
+
+	err := Account.Find(findM).One(&m)
+	if err != nil {
+		utils.Log(utils.ERR, err.Error())
+	}
+
+	return m
+}
+
 func InsertToken(userID bson.ObjectId, token string, ip string, ua string) {
 	m := TokenModel{
 		Token:       token,
@@ -91,7 +104,7 @@ func CheckToken(token string) bool {
 
 		err := Account.Update(findM, changeM)
 		if err != nil {
-			lib.Log(lib.INF, err.Error())
+			utils.Log(utils.ERR, err.Error())
 		}
 		return false
 	}
@@ -104,22 +117,22 @@ func StopToken(token string) {
 
 	err := Account.Update(findM, changeM)
 	if err != nil {
-		lib.Log(lib.INF, err.Error())
+		utils.Log(utils.ERR, err.Error())
 	}
 }
 
-func GetToken(token string) AccountModel {
+func GetToken(token string) TokenModel {
 	m := AccountModel{}
 
 	findM := bson.M{"tokens.token": token, "tokens.alive": true}
-	selectM := bson.M{"tokens.$": 1, "username": 1}
+	selectM := bson.M{"tokens.$": 1}
 
 	err := Account.Find(findM).Select(selectM).One(&m)
 	if err != nil {
-		lib.Log(lib.INF, err.Error())
+		utils.Log(utils.INF, err.Error())
 	}
 
-	return m
+	return m.Tokens[0]
 }
 
 func toSHA256(s string) string {

@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"oos-go/handler"
 	"oos-go/lib"
+	"oos-go/utils"
 )
 
 func main() {
-	lib.Log(lib.INF, "oos start at "+lib.Config.Listen)
+	utils.Log(utils.INF, "oos start at "+utils.Config.Listen)
 
 	maps := map[string]lib.HandlerInterface{
 		"/account/signup":       handler.AccountSignup{},
@@ -17,7 +18,7 @@ func main() {
 		"/user/get_user":        handler.UserGetUser{},
 	}
 
-	err := http.ListenAndServe(lib.Config.Listen, lib.NewHttpServer(maps))
+	err := http.ListenAndServe(utils.Config.Listen, lib.NewHttpServer(maps))
 	if err != nil {
 		panic(err)
 	}

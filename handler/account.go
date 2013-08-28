@@ -22,18 +22,6 @@ type AccountSessionInfo struct {
 	lib.Handler
 }
 
-func randInt(min int, max int) int {
-	return min + rand.Intn(max-min)
-}
-
-func randomString(l int) string {
-	bytes := make([]byte, l)
-	for i := 0; i < l; i++ {
-		bytes[i] = byte(randInt(65, 90))
-	}
-	return string(bytes)
-}
-
 func (h AccountSignup) Post() int {
 	h.Init()
 
@@ -86,13 +74,11 @@ func (h AccountLogin) Post() int {
 func (h AccountLogout) Post() int {
 	h.Init()
 
-	token := h.PostValue["token"]
-
-	if model.CheckToken(token) == false {
-		return h.Error("invalid_token")
+	if h.CheckToken() {
+		return 200
 	}
 
-	model.StopToken(token)
+	model.StopToken(h.PostValue["token"])
 
 	return h.Result(nil, false)
 }
@@ -100,17 +86,28 @@ func (h AccountLogout) Post() int {
 func (h AccountSessionInfo) Post() int {
 	h.Init()
 
-	token := h.PostValue["token"]
-
-	if model.CheckToken(token) == false {
-		return h.Error("invalid_token")
+	if h.CheckToken() {
+		return 200
 	}
 
-	m := model.GetToken(token)
+	m := model.GetToken(h.PostValue["token"])
 
-	dataJson := lib.Json{}
-	dataJson["username"] = m.Username
-	dataJson["expired"] = m.Tokens[0].ExpiredTime.Unix()
+	dataJson := lib.Json{
+		"username": h.Account.Username,
+		"expired":  m.ExpiredTime.Unix(),
+	}
 
 	return h.Result(dataJson, false)
+}
+
+func randInt(min int, max int) int {
+	return min + rand.Intn(max-min)
+}
+
+func randomString(l int) string {
+	bytes := make([]byte, l)
+	for i := 0; i < l; i++ {
+		bytes[i] = byte(randInt(65, 90))
+	}
+	return string(bytes)
 }

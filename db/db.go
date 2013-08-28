@@ -2,7 +2,7 @@ package db
 
 import (
 	"labix.org/v2/mgo"
-	"oos-go/lib"
+	"oos-go/utils"
 )
 
 var (
@@ -12,12 +12,12 @@ var (
 
 func init() {
 	var err error
-	mongo, err = mgo.Dial(lib.Config.Mongodb)
+	mongo, err = mgo.Dial(utils.Config.Mongodb)
 	if err != nil {
 		panic(err)
 	}
 
-	dbname = lib.Config.Dbname
+	dbname = utils.Config.Dbname
 }
 
 func Exist(c *mgo.Collection, query interface{}) bool {

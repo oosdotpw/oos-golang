@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"oos-go/model"
 	"regexp"
 )
 
@@ -19,6 +20,8 @@ type Handler struct {
 
 	Header    *http.Header
 	PostValue map[string]string
+
+	Account *model.AccountModel
 }
 
 func (h *Handler) Init() {
@@ -36,6 +39,20 @@ func (h *Handler) Filter(field, regex, errmsg string) bool {
 		h.Error(errmsg)
 		return true
 	}
+	return false
+}
+
+func (h *Handler) CheckToken() bool {
+	token := h.PostValue["token"]
+
+	if model.CheckToken(token) == false {
+		h.Error("invalid_token")
+		return true
+	}
+
+	m := model.GetAccountByToken(token)
+	h.Account = &m
+
 	return false
 }
 

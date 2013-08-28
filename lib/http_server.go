@@ -2,6 +2,7 @@ package lib
 
 import (
 	"net/http"
+	"oos-go/utils"
 	"reflect"
 )
 
@@ -14,7 +15,7 @@ type HttpServer struct {
 func (h HttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	Log(INF, r.URL)
+	utils.Log(utils.INF, r.URL)
 
 	typ, exist := h.Maps[r.URL.Path]
 	if !exist {
