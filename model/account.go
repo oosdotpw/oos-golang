@@ -6,7 +6,6 @@ import (
 	"io"
 	"labix.org/v2/mgo/bson"
 	"oos-go/db"
-	"oos-go/utils"
 	"time"
 )
 
@@ -40,7 +39,10 @@ func InsertAccount(username string, passwd string, email string, contact string)
 		Tokens:     []TokenModel{},
 	}
 
-	Account.Insert(m)
+	err := Account.Insert(m)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func ExistAccount(username string) bool {
@@ -56,7 +58,10 @@ func CheckAccount(username string, passwd string) bool {
 func GetAccount(username string) AccountModel {
 	m := AccountModel{}
 
-	Account.Find(bson.M{"username": username}).One(&m)
+	err := Account.Find(bson.M{"username": username}).One(&m)
+	if err != nil {
+		panic(err)
+	}
 
 	return m
 }
@@ -68,7 +73,18 @@ func GetAccountByToken(token string) AccountModel {
 
 	err := Account.Find(findM).One(&m)
 	if err != nil {
-		utils.Log(utils.ERR, err.Error())
+		panic(err)
+	}
+
+	return m
+}
+
+func GetAccountByID(id bson.ObjectId) AccountModel {
+	m := AccountModel{}
+
+	err := Account.FindId(id).One(&m)
+	if err != nil {
+		panic(err)
 	}
 
 	return m
@@ -85,7 +101,10 @@ func InsertToken(userID bson.ObjectId, token string, ip string, ua string) {
 		Alive:       true,
 	}
 
-	Account.UpdateId(userID, bson.M{"$push": bson.M{"tokens": m}})
+	err := Account.UpdateId(userID, bson.M{"$push": bson.M{"tokens": m}})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func CheckToken(token string) bool {
@@ -104,7 +123,7 @@ func CheckToken(token string) bool {
 
 		err := Account.Update(findM, changeM)
 		if err != nil {
-			utils.Log(utils.ERR, err.Error())
+			panic(err)
 		}
 		return false
 	}
@@ -117,7 +136,7 @@ func StopToken(token string) {
 
 	err := Account.Update(findM, changeM)
 	if err != nil {
-		utils.Log(utils.ERR, err.Error())
+		panic(err)
 	}
 }
 
@@ -129,7 +148,7 @@ func GetToken(token string) TokenModel {
 
 	err := Account.Find(findM).Select(selectM).One(&m)
 	if err != nil {
-		utils.Log(utils.INF, err.Error())
+		panic(err)
 	}
 
 	return m.Tokens[0]
